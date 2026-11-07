@@ -9,9 +9,8 @@ import RegisterButton from "@/components/RegisterButton";
 import { useAuthAction } from "@/hooks/useAuthAction";
 
 export default function RegisterPage() {
-  const { user, loginWithGoogle, loading } = useAuth();
+  const { user, loginWithGoogle, loginWithGithub, loading } = useAuth();
   const router = useRouter();
-
   const { error, executeAuth } = useAuthAction();
 
   const authOptions = useMemo(
@@ -23,11 +22,16 @@ export default function RegisterPage() {
         icon: "icon-google",
         onClick: () => executeAuth(loginWithGoogle, "Google"),
       },
-      { id: "github", provider: "GitHub", icon: "icon-github" },
+      {
+        id: "github",
+        provider: "GitHub",
+        icon: "icon-github",
+        onClick: () => executeAuth(loginWithGithub, "GitHub"),
+      },
       { id: "apple", provider: "Apple", icon: "icon-apple" },
       { id: "microsoft", provider: "Microsoft", icon: "icon-microsoft" },
     ],
-    [loginWithGoogle, executeAuth],
+    [loginWithGoogle, loginWithGithub, executeAuth],
   );
 
   useEffect(() => {
@@ -62,11 +66,11 @@ export default function RegisterPage() {
         </div>
 
         <p className="text-gray-400 mb-6 text-sm">
-          Registrate para sincronizar y conectar con tus amigos
+          Crea una cuenta para sincronizar y ver videos con tus amigos
         </p>
 
         {error && (
-          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm font-medium">
+          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm font-medium transition-all">
             {error}
           </div>
         )}

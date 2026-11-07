@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   GoogleAuthProvider,
+  GithubAuthProvider,
   signOut,
 } from "firebase/auth";
 import { auth } from "../firebase/firebase";
@@ -35,12 +36,25 @@ export function AuthProvider({ children }) {
     return await signInWithPopup(auth, provider);
   };
 
+  const loginWithGithub = async () => {
+    const provider = new GithubAuthProvider();
+    return await signInWithPopup(auth, provider);
+  };
+
   const logout = async () => {
     await signOut(auth);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, loginWithGoogle, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        loginWithGoogle,
+        loginWithGithub,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
