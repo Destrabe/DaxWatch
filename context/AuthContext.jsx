@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
   signOut,
 } from "firebase/auth";
-import { auth } from "../firebase/firebase"; // O la ruta donde tengas tu inicializador
+import { auth } from "../firebase/firebase";
 
 const AuthContext = createContext({});
 
@@ -16,8 +16,15 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser) {
+        const token = await currentUser.getIdToken();
+        localStorage.setItem("daxwatch_token", token);
+      } else {
+        localStorage.removeItem("daxwatch_token");
+      }
       setLoading(false);
     });
     return () => unsubscribe();
