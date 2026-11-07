@@ -32,11 +32,7 @@ export function AuthProvider({ children }) {
 
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error("Error al iniciar sesión con Google", error);
-    }
+    return await signInWithPopup(auth, provider);
   };
 
   const logout = async () => {

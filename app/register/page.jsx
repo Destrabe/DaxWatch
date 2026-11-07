@@ -6,20 +6,28 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import Image from "next/image";
 import RegisterButton from "@/components/RegisterButton";
+import { useAuthAction } from "@/hooks/useAuthAction";
 
 export default function RegisterPage() {
-  const { user, loading } = useAuth();
+  const { user, loginWithGoogle, loading } = useAuth();
   const router = useRouter();
+
+  const { error, executeAuth } = useAuthAction();
 
   const authOptions = useMemo(
     () => [
       { id: "mail", provider: "Correo", icon: "icon-mail" },
-      { id: "google", provider: "Google", icon: "icon-google" },
+      {
+        id: "google",
+        provider: "Google",
+        icon: "icon-google",
+        onClick: () => executeAuth(loginWithGoogle, "Google"),
+      },
       { id: "github", provider: "GitHub", icon: "icon-github" },
       { id: "apple", provider: "Apple", icon: "icon-apple" },
       { id: "microsoft", provider: "Microsoft", icon: "icon-microsoft" },
     ],
-    [],
+    [loginWithGoogle, executeAuth],
   );
 
   useEffect(() => {
@@ -57,12 +65,19 @@ export default function RegisterPage() {
           Registrate para sincronizar y conectar con tus amigos
         </p>
 
-        <div className="flex flex-col gap-3 w-full max-w-sm mx-auto mt-6">
+        {error && (
+          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm font-medium">
+            {error}
+          </div>
+        )}
+
+        <div className="flex flex-col gap-3 w-full max-w-sm mx-auto mt-2">
           {authOptions.map((option) => (
             <RegisterButton
               key={option.id}
               provider={option.provider}
               icon={option.icon}
+              onClick={option.onClick}
             />
           ))}
         </div>
